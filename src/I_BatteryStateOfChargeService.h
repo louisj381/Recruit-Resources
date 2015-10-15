@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QTime>
-class BatteryData;
+struct BatteryData;
 
 class I_BatteryStateOfChargeService
 {

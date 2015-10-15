@@ -8,3 +8,4 @@ release
 build*
 *.user*
 *.orig
+debug

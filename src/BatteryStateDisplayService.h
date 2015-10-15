@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QObject>
-class BatteryData;
 class I_BatteryDataSource;
 class I_BatteryStateOfChargeService;
+struct BatteryData;
 
 class BatteryStateDisplayService : public QObject
 {
