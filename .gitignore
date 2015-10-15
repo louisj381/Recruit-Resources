@@ -1,0 +1,10 @@
+*.pro.*
+*.autosave
+Makefile*
+*.o
+moc_*
+.tags*
+release
+build*
+*.user*
+*.orig
