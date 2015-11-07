@@ -1,10 +1,9 @@
-//Find AmpHours (Delta Current * Delta Time) (Absoulte current)
 
 #include "BatteryStateOfChargeService.h"
 #include "BatteryData.h"
-#include "iostream"
 #include <QTextStream>
 #include <QDebug>
+#include <QFile>
 
 namespace
 {
@@ -14,7 +13,7 @@ namespace
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
 : initialStateOfChargePercent_(initialStateOfChargePercent)
 {
- AmpHours=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
+ AmpHoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
 }
 BatteryStateOfChargeService::~BatteryStateOfChargeService()
 {
@@ -22,44 +21,50 @@ BatteryStateOfChargeService::~BatteryStateOfChargeService()
 
 double BatteryStateOfChargeService::totalAmpHoursUsed() const
 {
-    return (AmpHours);
+    return (AmpHoursUsed_);
 }
 
 bool BatteryStateOfChargeService::isCharging() const
 {
+    if(newCurrent_>=0)
     return false;
+    else
+    return true;
 }
 
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
-    return QTime::currentTime();
+  double timeLeft;
+  timeLeft=(AmpHoursUsed_/newCurrent_);
+  timeLeft=qAbs(timeLeft);
+  timeLeft=timeLeft/2.77778e-7;
+
+  QTime base(0,0,0);
+  QTime timeOutput= base.addMSecs(timeLeft);
+  return timeOutput;
 }
 
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
+ //Setting Values
 
-    //Current Calculation
-    //Present value of current
-    objectCurrent=batteryData.current;
-    inCurrent=objectCurrent;
+    inCurrent_=newCurrent_;
+    initialTime_=currentTime_;
 
-    //Time Stuff
-    currentTime=batteryData.time;
-    if(firstRun!=true){
-    changeTime=abs(intialTime.msecsTo(currentTime));
-    changeTime=changeTime*2.77778e-7;
+    newCurrent_=batteryData.current;
+    currentTime_=batteryData.time;
 
-    //Average
-    double avgCurrent=(objectCurrent+inCurrent)/2;
-    //Amp hours Stuff
-   double ptpAh= avgCurrent*changeTime;
-AmpHours=AmpHours-ptpAh;
+    if(firstRun_!=true){
+
+    int mschangeTime=abs(initialTime_.msecsTo(currentTime_));
+    double changeTime=mschangeTime*2.77778e-7;
+
+    double avgCurrent=(newCurrent_+inCurrent_)/2;
+    double pointAverageAH= avgCurrent*changeTime;
+
+    AmpHoursUsed_=AmpHoursUsed_-pointAverageAH;
     }
-    firstRun=false;
+    firstRun_=false;
 
-//Update the initial current for next run;
-inCurrent=objectCurrent;
-//Update the initial time for next run
-intialTime=currentTime;
-
+    sumCurrent_+=inCurrent_;
 }
