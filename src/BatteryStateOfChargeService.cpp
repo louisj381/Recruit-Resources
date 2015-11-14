@@ -27,17 +27,16 @@
 
 #include "BatteryStateOfChargeService.h"
 #include "BatteryData.h"
-#include <QTextStream>
-#include <QDebug>
-#include <QFile>
+
 
 namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
+    const double MSECS_TO_HOURS=2.77778e-7;
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
-: initialStateOfChargePercent_(initialStateOfChargePercent)
+: initialStateOfChargePercent_(initialStateOfChargePercent),newCurrent_(0), sumCurrent_(0)
 {
  AmpHoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
 }
@@ -63,34 +62,34 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
   double timeLeft;
   timeLeft=(AmpHoursUsed_/newCurrent_);
   timeLeft=qAbs(timeLeft);
-  timeLeft=timeLeft/2.77778e-7;
+  timeLeft=timeLeft/MSECS_TO_HOURS;
 
-  QTime base(0,0,0);
-  QTime timeOutput= base.addMSecs(timeLeft);
-  return timeOutput;
+  QTime base(0,0);
+  return base.addMSecs(timeLeft);
 }
 
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
  //Setting Values
-
-    inCurrent_=newCurrent_;
-    initialTime_=currentTime_;
+  double inCurrent_=newCurrent_;
+   QTime previous_Time=currentTime_;
 
     newCurrent_=batteryData.current;
     currentTime_=batteryData.time;
 
     if(firstRun_!=true){
 
-    int mschangeTime=abs(initialTime_.msecsTo(currentTime_));
-    double changeTime=mschangeTime*2.77778e-7;
+    int mschangeTime=abs(previous_Time.msecsTo(currentTime_));
+    double changeTime=mschangeTime*MSECS_TO_HOURS;
 
     double avgCurrent=(newCurrent_+inCurrent_)/2;
     double pointAverageAH= avgCurrent*changeTime;
 
     AmpHoursUsed_=AmpHoursUsed_-pointAverageAH;
     }
+    else
     firstRun_=false;
+
 
     sumCurrent_+=inCurrent_;
 }

@@ -46,11 +46,9 @@ private:
     const double initialStateOfChargePercent_;
 
     double AmpHoursUsed_;
-    double inCurrent_;
-    double newCurrent_=0;
-    double sumCurrent_=0;
+    double newCurrent_;
+    double sumCurrent_;
     bool firstRun_=true;
-    QTime initialTime_;
     QTime currentTime_;
     // Recommend adding necessary variables here
 };

@@ -30,9 +30,13 @@
 #include <QString>
 #include <QTextStream>
 #include "LogFileReader.h"
-#include <iostream>
 #include <QTime>
-using namespace std;
+namespace
+{
+const QString STRING_TIME_CONVERSION= "hh:mm:ss.zzz";
+const QString SPLIT= ", ";
+const int COLUMNS = 3;
+}
 LogFileReader::LogFileReader()
 {
 }
@@ -77,15 +81,15 @@ bool LogFileReader::readAll(const QString& fileName)
 bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) const
 {
     // TODO implement this first
-QStringList sections= line.split(", ");
-if(sections.length()!=3)
+QStringList sections= line.split(SPLIT);
+if(sections.length()!=COLUMNS)
 {
     return false;
 }
 
 QString timeString= sections.at(0);
 //Converts timeString to time for battery data
-batteryData.time= QTime::fromString(timeString,"hh:mm:ss.zzz");
+batteryData.time= QTime::fromString(timeString,STRING_TIME_CONVERSION);
 //Takes voltage
 bool voltageOK;
 batteryData.voltage=sections.at(1).toDouble(&voltageOK);
