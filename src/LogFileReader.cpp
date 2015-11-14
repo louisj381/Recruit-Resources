@@ -81,7 +81,7 @@ bool LogFileReader::readAll(const QString& fileName)
 bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) const
 {
     QStringList sections = line.split(BatData_Delimiter);
-    if(sections.length()!=COLUMNS)
+    if(sections.length() != COLUMNS)
     {
         return false;
     }

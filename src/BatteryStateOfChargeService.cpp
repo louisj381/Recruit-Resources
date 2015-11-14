@@ -35,9 +35,11 @@ namespace
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
-: initialStateOfChargePercent_(initialStateOfChargePercent),presentCurrent_(0), firstRun_(true)
+: initialStateOfChargePercent_(initialStateOfChargePercent)
+, presentCurrent_(0)
+, firstRun_(true)
 {
-    ampHoursUsed_ = BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
+    ampHoursUsed_ = BATTERY_AMP_HOUR_CAPACITY * (initialStateOfChargePercent_ / 100);
 }
 
 BatteryStateOfChargeService::~BatteryStateOfChargeService()
@@ -64,7 +66,7 @@ bool BatteryStateOfChargeService::isCharging() const
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
     double timeLeft;
-    timeLeft=qAbs(ampHoursUsed_/presentCurrent_)/MSECS_TO_HOURS;
+    timeLeft=qAbs(ampHoursUsed_ / presentCurrent_) / MSECS_TO_HOURS;
     QTime base(0,0);
     return base.addMSecs(timeLeft);
 }
@@ -85,12 +87,12 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     else
     {
         int msSinceLastTime = abs(previous_Time.msecsTo(presentTime_));
-        double hoursSinceLastTime = msSinceLastTime*MSECS_TO_HOURS;
+        double hoursSinceLastTime = msSinceLastTime * MSECS_TO_HOURS;
 
-        double avgCurrent = (presentCurrent_+previousCurrent_)/2;
+        double avgCurrent = (presentCurrent_ + previousCurrent_) / 2;
 
-        double ampHoursBetweenPresent_PreviousTime = avgCurrent*hoursSinceLastTime;
+        double ampHoursBetweenPresentPreviousTime = avgCurrent * hoursSinceLastTime;
 
-        ampHoursUsed_ = ampHoursUsed_-ampHoursBetweenPresent_PreviousTime;
+        ampHoursUsed_ = ampHoursUsed_ - ampHoursBetweenPresentPreviousTime;
     }
 }
