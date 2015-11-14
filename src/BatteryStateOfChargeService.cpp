@@ -27,16 +27,17 @@
 
 #include "BatteryStateOfChargeService.h"
 #include "BatteryData.h"
+ 
 namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
-    const double MSECS_TO_HOURS=2.77778e-7;
+    const double MSECS_TO_HOURS = 2.77778e-7;
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
-: initialStateOfChargePercent_(initialStateOfChargePercent),present_Current_(0), firstRun_(true)
+: initialStateOfChargePercent_(initialStateOfChargePercent),presentCurrent_(0), firstRun_(true)
 {
-    amphoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
+    ampHoursUsed_ = BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
 }
 
 BatteryStateOfChargeService::~BatteryStateOfChargeService()
@@ -45,11 +46,12 @@ BatteryStateOfChargeService::~BatteryStateOfChargeService()
 
 double BatteryStateOfChargeService::totalAmpHoursUsed() const
 {
-    return (amphoursUsed_);
+    return ampHoursUsed_;
 }
+
 bool BatteryStateOfChargeService::isCharging() const
 {
-    if(present_Current_>=0)
+    if(presentCurrent_ >= 0)
     {
         return false;
     }
@@ -58,30 +60,37 @@ bool BatteryStateOfChargeService::isCharging() const
         return true;
     }
 }
+
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
     double timeLeft;
-    timeLeft=(qAbs(amphoursUsed_/present_Current_))/MSECS_TO_HOURS;
+    timeLeft=qAbs(ampHoursUsed_/presentCurrent_)/MSECS_TO_HOURS;
     QTime base(0,0);
     return base.addMSecs(timeLeft);
 }
+
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
  
-    double previousCurrent_=present_Current_;
-    QTime previous_Time=presentTime_;
-    present_Current_=batteryData.current;
-    presentTime_=batteryData.time;
-    if(firstRun_!=false)
+    double previousCurrent_ = presentCurrent_;
+    QTime previous_Time = presentTime_;
+
+    presentCurrent_ = batteryData.current;
+    presentTime_ = batteryData.time;
+
+    if(firstRun_ != false)
     {
-        firstRun_=false;
+        firstRun_ = false;
     }
     else
     {
-        int msSinceLastTime=abs(previous_Time.msecsTo(presentTime_));
-        double hoursSinceLastTime=msSinceLastTime*MSECS_TO_HOURS;
-        double avgCurrent=(present_Current_+previousCurrent_)/2;
-        double ampHoursBetweenPresent_PreviousTime= avgCurrent*hoursSinceLastTime;
-        amphoursUsed_=amphoursUsed_-ampHoursBetweenPresent_PreviousTime;
+        int msSinceLastTime = abs(previous_Time.msecsTo(presentTime_));
+        double hoursSinceLastTime = msSinceLastTime*MSECS_TO_HOURS;
+
+        double avgCurrent = (presentCurrent_+previousCurrent_)/2;
+
+        double ampHoursBetweenPresent_PreviousTime = avgCurrent*hoursSinceLastTime;
+
+        ampHoursUsed_ = ampHoursUsed_-ampHoursBetweenPresent_PreviousTime;
     }
 }
