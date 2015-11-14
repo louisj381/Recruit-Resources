@@ -33,11 +33,10 @@ namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
     const double MSECS_TO_HOURS=2.77778e-7;
-    bool firstRun=true;
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
-: initialStateOfChargePercent_(initialStateOfChargePercent),present_Current_(0)
+: initialStateOfChargePercent_(initialStateOfChargePercent),present_Current_(0), firstRun_(true)
 {
  AmpHoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
 }
@@ -74,8 +73,8 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     present_Current_=batteryData.current;
     presentTime_=batteryData.time;
 
-    if(firstRun!=false)
-        firstRun=false;
+    if(firstRun_!=false)
+        firstRun_=false;
     else
     {
 

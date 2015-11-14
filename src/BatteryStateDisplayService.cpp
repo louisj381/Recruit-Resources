@@ -53,7 +53,7 @@ BatteryStateDisplayService::~BatteryStateDisplayService()
 void BatteryStateDisplayService::handleBatteryDataReceived(const BatteryData& batteryData)
 {
     batteryStateOfChargeService_.addData(batteryData);
-    QString Charge_Depletion_Display=" Time Until Depletion";
+    QString Charge_Depletion_Display=" Time Until Depletion: ";
     if(batteryStateOfChargeService_.isCharging())
         Charge_Depletion_Display=" Time Until Charge: ";
 

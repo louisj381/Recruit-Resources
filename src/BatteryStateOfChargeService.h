@@ -48,5 +48,6 @@ private:
     double AmpHoursUsed_;
     double present_Current_;
     QTime presentTime_;
+    bool firstRun_;
     // Recommend adding necessary variables here
 };
