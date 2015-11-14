@@ -83,9 +83,9 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
             double HoursSinceLastTime=msSinceLastTime*MSECS_TO_HOURS;
 
             double avgCurrent=(present_Current_+previousCurrent_)/2;
-            double pointAverageAmpHours= avgCurrent*HoursSinceLastTime;
+            double AmpHoursBetweenPresent_PreviousTime= avgCurrent*HoursSinceLastTime;
 
-            AmpHoursUsed_=AmpHoursUsed_-pointAverageAmpHours;
+            AmpHoursUsed_=AmpHoursUsed_-AmpHoursBetweenPresent_PreviousTime;
 
     }
 

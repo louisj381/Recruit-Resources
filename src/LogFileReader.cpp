@@ -33,8 +33,8 @@
 #include <QTime>
 namespace
 {
-const QString STRING_TIME_CONVERSION= "hh:mm:ss.zzz";
-const QString SPLIT= ", ";
+const QString STRING_TIME_FORMAT= "hh:mm:ss.zzz";
+const QString BatData_Delimiter= ", ";
 const int COLUMNS = 3;
 }
 LogFileReader::LogFileReader()
@@ -81,7 +81,7 @@ bool LogFileReader::readAll(const QString& fileName)
 bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) const
 {
     // TODO implement this first
-QStringList sections= line.split(SPLIT);
+QStringList sections= line.split(BatData_Delimiter);
 if(sections.length()!=COLUMNS)
 {
     return false;
@@ -89,15 +89,15 @@ if(sections.length()!=COLUMNS)
 
 QString timeString= sections.at(0);
 //Converts timeString to time for battery data
-batteryData.time= QTime::fromString(timeString,STRING_TIME_CONVERSION);
+batteryData.time= QTime::fromString(timeString,STRING_TIME_FORMAT);
 //Takes voltage
 bool voltageOK;
 batteryData.voltage=sections.at(1).toDouble(&voltageOK);
 //Takes curent
 bool currentOK;
 batteryData.current=sections.at(2).toDouble(&currentOK);
-if(!voltageOK || !currentOK ||!batteryData.time.isValid())
-    return false;
-else
+if(voltageOK && currentOK && batteryData.time.isValid())
     return true;
+else
+    return false;
 }
