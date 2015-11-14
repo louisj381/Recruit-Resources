@@ -28,7 +28,6 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QTimer>
-#include <iostream>
 #include "BatteryStateDisplayService.h"
 #include "BatteryStateOfChargeService.h"
 #include "LogFileReader.h"

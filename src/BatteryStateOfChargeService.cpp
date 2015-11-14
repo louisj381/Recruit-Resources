@@ -1,4 +1,4 @@
-/** 
+/**
  *  University of Calgary Solar Car Team New Recruit Exercise
  *  Copyright (C) 2015 University of Calgary Solar Car Team
  *
@@ -33,10 +33,11 @@ namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
     const double MSECS_TO_HOURS=2.77778e-7;
+    bool firstRun=true;
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
-: initialStateOfChargePercent_(initialStateOfChargePercent),newCurrent_(0), sumCurrent_(0)
+: initialStateOfChargePercent_(initialStateOfChargePercent),present_Current_(0)
 {
  AmpHoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
 }
@@ -51,7 +52,7 @@ double BatteryStateOfChargeService::totalAmpHoursUsed() const
 
 bool BatteryStateOfChargeService::isCharging() const
 {
-    if(newCurrent_>=0)
+    if(present_Current_>=0)
     return false;
     else
     return true;
@@ -60,10 +61,7 @@ bool BatteryStateOfChargeService::isCharging() const
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
   double timeLeft;
-  timeLeft=(AmpHoursUsed_/newCurrent_);
-  timeLeft=qAbs(timeLeft);
-  timeLeft=timeLeft/MSECS_TO_HOURS;
-
+  timeLeft=(qAbs(AmpHoursUsed_/present_Current_))/MSECS_TO_HOURS;
   QTime base(0,0);
   return base.addMSecs(timeLeft);
 }
@@ -71,25 +69,24 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
  //Setting Values
-  double inCurrent_=newCurrent_;
-   QTime previous_Time=currentTime_;
+  double previousCurrent_=present_Current_;
+   QTime previous_Time=presentTime_;
+    present_Current_=batteryData.current;
+    presentTime_=batteryData.time;
 
-    newCurrent_=batteryData.current;
-    currentTime_=batteryData.time;
-
-    if(firstRun_!=true){
-
-    int mschangeTime=abs(previous_Time.msecsTo(currentTime_));
-    double changeTime=mschangeTime*MSECS_TO_HOURS;
-
-    double avgCurrent=(newCurrent_+inCurrent_)/2;
-    double pointAverageAH= avgCurrent*changeTime;
-
-    AmpHoursUsed_=AmpHoursUsed_-pointAverageAH;
-    }
+    if(firstRun!=false)
+        firstRun=false;
     else
-    firstRun_=false;
+    {
 
+            int msSinceLastTime=abs(previous_Time.msecsTo(presentTime_));
+            double HoursSinceLastTime=msSinceLastTime*MSECS_TO_HOURS;
 
-    sumCurrent_+=inCurrent_;
+            double avgCurrent=(present_Current_+previousCurrent_)/2;
+            double pointAverageAmpHours= avgCurrent*HoursSinceLastTime;
+
+            AmpHoursUsed_=AmpHoursUsed_-pointAverageAmpHours;
+
+    }
+
 }
