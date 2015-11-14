@@ -33,9 +33,9 @@
 #include <QTime>
 namespace
 {
-const QString STRING_TIME_FORMAT= "hh:mm:ss.zzz";
-const QString BatData_Delimiter= ", ";
-const int COLUMNS = 3;
+    const QString STRING_TIME_FORMAT= "hh:mm:ss.zzz";
+    const QString BatData_Delimiter= ", ";
+    const int COLUMNS = 3;
 }
 LogFileReader::LogFileReader()
 {
@@ -54,7 +54,6 @@ bool LogFileReader::readAll(const QString& fileName)
         qDebug() << "Unable to open file" << fileName;
         return false;
     }
-
     QTextStream input(&file);
     while(!input.atEnd())
     {
@@ -62,8 +61,7 @@ bool LogFileReader::readAll(const QString& fileName)
         BatteryData batteryData;
         if (!parseLine(line, batteryData))
         {
-            qDebug() << "Error while parsing" << line;
-            // return false;
+            qDebug() << "Error while parsing" << line;         
         }
         else
         {
@@ -81,23 +79,23 @@ bool LogFileReader::readAll(const QString& fileName)
 bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) const
 {
     // TODO implement this first
-QStringList sections= line.split(BatData_Delimiter);
-if(sections.length()!=COLUMNS)
-{
-    return false;
-}
-
-QString timeString= sections.at(0);
-//Converts timeString to time for battery data
-batteryData.time= QTime::fromString(timeString,STRING_TIME_FORMAT);
-//Takes voltage
-bool voltageOK;
-batteryData.voltage=sections.at(1).toDouble(&voltageOK);
-//Takes curent
-bool currentOK;
-batteryData.current=sections.at(2).toDouble(&currentOK);
-if(voltageOK && currentOK && batteryData.time.isValid())
-    return true;
-else
-    return false;
+    QStringList sections= line.split(BatData_Delimiter);
+    if(sections.length()!=COLUMNS)
+    {
+        return false;
+    }
+    QString timeString= sections.at(0);
+    batteryData.time= QTime::fromString(timeString,STRING_TIME_FORMAT);
+    bool voltageOK;
+    batteryData.voltage=sections.at(1).toDouble(&voltageOK);
+    bool currentOK;
+    batteryData.current=sections.at(2).toDouble(&currentOK);
+    if(voltageOK && currentOK && batteryData.time.isValid())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

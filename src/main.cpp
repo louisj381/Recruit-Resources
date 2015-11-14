@@ -71,4 +71,4 @@ int main(int argc, char *argv[])
     // Quit the program when it is done.
     QTimer::singleShot(0, &app, SLOT(quit()));
     return app.exec();
-};
+}

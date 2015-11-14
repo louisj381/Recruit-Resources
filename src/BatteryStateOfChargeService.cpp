@@ -27,8 +27,6 @@
 
 #include "BatteryStateOfChargeService.h"
 #include "BatteryData.h"
-
-
 namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
@@ -38,54 +36,52 @@ namespace
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
 : initialStateOfChargePercent_(initialStateOfChargePercent),present_Current_(0), firstRun_(true)
 {
- AmpHoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
+    amphoursUsed_=BATTERY_AMP_HOUR_CAPACITY*(initialStateOfChargePercent_/100);
 }
+
 BatteryStateOfChargeService::~BatteryStateOfChargeService()
 {
 }
 
 double BatteryStateOfChargeService::totalAmpHoursUsed() const
 {
-    return (AmpHoursUsed_);
+    return (amphoursUsed_);
 }
-
 bool BatteryStateOfChargeService::isCharging() const
 {
     if(present_Current_>=0)
-    return false;
-    else
-    return true;
-}
-
-QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
-{
-  double timeLeft;
-  timeLeft=(qAbs(AmpHoursUsed_/present_Current_))/MSECS_TO_HOURS;
-  QTime base(0,0);
-  return base.addMSecs(timeLeft);
-}
-
-void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
-{
- //Setting Values
-  double previousCurrent_=present_Current_;
-   QTime previous_Time=presentTime_;
-    present_Current_=batteryData.current;
-    presentTime_=batteryData.time;
-
-    if(firstRun_!=false)
-        firstRun_=false;
+    {
+        return false;
+    }
     else
     {
-
-            int msSinceLastTime=abs(previous_Time.msecsTo(presentTime_));
-            double HoursSinceLastTime=msSinceLastTime*MSECS_TO_HOURS;
-
-            double avgCurrent=(present_Current_+previousCurrent_)/2;
-            double AmpHoursBetweenPresent_PreviousTime= avgCurrent*HoursSinceLastTime;
-
-            AmpHoursUsed_=AmpHoursUsed_-AmpHoursBetweenPresent_PreviousTime;
-
+        return true;
     }
-
+}
+QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
+{
+    double timeLeft;
+    timeLeft=(qAbs(amphoursUsed_/present_Current_))/MSECS_TO_HOURS;
+    QTime base(0,0);
+    return base.addMSecs(timeLeft);
+}
+void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
+{
+ 
+    double previousCurrent_=present_Current_;
+    QTime previous_Time=presentTime_;
+    present_Current_=batteryData.current;
+    presentTime_=batteryData.time;
+    if(firstRun_!=false)
+    {
+        firstRun_=false;
+    }
+    else
+    {
+        int msSinceLastTime=abs(previous_Time.msecsTo(presentTime_));
+        double hoursSinceLastTime=msSinceLastTime*MSECS_TO_HOURS;
+        double avgCurrent=(present_Current_+previousCurrent_)/2;
+        double ampHoursBetweenPresent_PreviousTime= avgCurrent*hoursSinceLastTime;
+        amphoursUsed_=amphoursUsed_-ampHoursBetweenPresent_PreviousTime;
+    }
 }
