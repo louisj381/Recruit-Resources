@@ -1,4 +1,4 @@
-# UofCSolarRecruitTraining
+# U of C Solar Car Recruit Training
 Intro project to learn c++ and QT
 
 To build this project on linux navigate to the source directory and run the following commands:
