@@ -67,7 +67,7 @@ bool LogFileReader::readAll(const QString& fileName)
         else
         {
             // This is how to send out a signal in QT using the emit keyword.
-            // This line notifies how any classes listening to this signal
+            // This line notifies the classes listening to this signal
             // that battery data has been received.
             emit batteryDataReceived(batteryData);
         }
