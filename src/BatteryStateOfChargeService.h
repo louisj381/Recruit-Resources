@@ -35,17 +35,17 @@ public:
     explicit BatteryStateOfChargeService(double initialStateOfChargePercent);
     virtual ~BatteryStateOfChargeService();
 
+    /*Returns the total amp hours used*/
     double totalAmpHoursUsed() const;
-    /*Promises: Returns the total amp hours used*/
 
+    /*Returns true if the battery is being charged, false if not.*/
     bool isCharging() const;
-    /*Promises: Returns through if the battery is being charged, false if not.*/
 
+    /*Return the time remaining to when the battery is charged or depleted*/
     QTime timeWhenChargedOrDepleted() const;
-    /*Promises: Return the time remaining to when the battery is charged or depleted*/
 
+    /*Update Variables*/
     void addData(const BatteryData& batteryData);
-    /*Promises: Update variables*/
 
 private:
     // Convention is to have an _ after private members

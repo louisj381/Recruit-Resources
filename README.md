@@ -15,6 +15,6 @@ In QT Creator, the above `qmake` and `make` are located in `Build`, and the proj
 The goal of this project is to give new recuits a good starting point to learn the required skills to work on the other projects.
 
 Tasks to complete:
-
+ *  Complete the error checking in LogFileReader.
  *  Implement the functions of BatteryStateOfChargeService.
  *  Print out time until depleted or charged in BatteryStateDisplayService.
