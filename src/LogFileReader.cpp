@@ -31,12 +31,14 @@
 #include <QTextStream>
 
 #include "LogFileReader.h"
+
 namespace
 {
     const QString STRING_TIME_FORMAT= "hh:mm:ss.zzz";
     const QString BatData_Delimiter= ", ";
     const int COLUMNS = 3;
 }
+
 LogFileReader::LogFileReader()
 {
 }
