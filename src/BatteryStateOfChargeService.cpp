@@ -59,5 +59,5 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
     Q_UNUSED(batteryData);
-    // Update your variables here.
+    // This is where you can update your variables
 }
