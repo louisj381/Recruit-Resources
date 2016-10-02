@@ -9,3 +9,5 @@ build*
 *.user*
 *.orig
 debug
+*.depend
+*.layout
