@@ -1,27 +1,31 @@
-//This line is a preprocessor directive that prevents this header file from accidentally being included multiple times by source files.
+// This line is a preprocessor directive that this header is only defined once.
+// This needs to be included in each header file.
 #pragma once
 
 #include <string>
 class Person
 {
 public:
-//A Rule of Thumb when designing classes is to have a default constructor, regular constructor, and a destructor. This is the referred to as the rule of three in C++ programming.
-	Person();
-	Person(const std::string name, int age);
-	~Person();
+// A Rule of Thumb when designing classes is to have a default constructor, regular constructor, and a destructor.
+    Person();
+    Person(const std::string& name, int age);
+    ~Person();
 
-	int getAge() const;
-	std::string getName() const;
+    int getAge() const;
+    const std::string& getName() const;
 
-	void printInfo();
+    void printInfo();//Print out the name and age of the person.
 
-	void setName(const std::string newName);
-	void setAge(int newAge);
-	static int combinedAge(Person** personArray);
-	static void birthday(Person& x);
+    void setName(const std::string& newName);
+    void setAge(int newAge);
+
+    static int combinedAge(Person** x, int size); // Print the combined Age of everyone pointed to by x
+    static void birthday(Person& x); // Increases the Person's Age by 1.
 private:
-	std::string name_;
-	int age_;
+    std::string name_;
+
+    int* age_; // age_ should be a dynamically allocated.
+
 };
 
 
