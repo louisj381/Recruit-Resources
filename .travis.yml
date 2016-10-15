@@ -12,9 +12,11 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
+- cd SetupScript  
 - UCSolarTeamInit.sh
 
 after_script:
+- cd SetupScript
 - chmod +x SetupScript/UCSolarTeamInitTest.sh
 - UCSolarTeamInitTest.sh
 
