@@ -1,0 +1,22 @@
+=  Basic UofC Git Workflow
+
+This is just a quick overview of the commands that would be used most frequently:
+
+*  Make your code changes
+*  `git status` -> Displays the files that have been changed. Green files means that it has been added. Red means that it is not added.
+*  `git add <file>` -> Add files so they could be committed.
+*  `git commit -m 'Enter a logical git message'` -> Make a commit local to your computer
+*  `git pull` -> Pull down any changes that were done by other people
+*  `git push` -> Send your changes so other people can use them.
+
+Here are some other commands that are still used frequently:
+
+*  `git checkout -b <newBranchName>` -> Make a new branch local to your computer
+*  `git checkout <branchName>` -> Go to an existing branch
+*  `git push --set-upstream origin <newBranchName>` -> Pushes a new branch from your computer to the 'origin' (Github) for the FIRST time. All subsequent pushes can just use the `git push` command as listed above.
+
+There are some great Git guides floating around. Check out these:
+
+*  http://rogerdudler.github.io/git-guide/
+*  https://git-scm.com/book/en/v2/Getting-Started-Git-Basics
+*  https://guides.github.com/

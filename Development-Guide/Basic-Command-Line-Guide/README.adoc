@@ -1,0 +1,69 @@
+Basic Command Line Guide
+------------------------
+
+This is a guide for common command line commands.
+
+.sudo
+----
+Allows a user with proper permissions (such as an admin) to execute commands. You will need to enter a password for the command to run.
+
+$ sudo <command>
+
+e.g.
+
+$ make install
+
+(usually will output an error, so use sudo)
+
+$ sudo make install
+
+(you will then be prompted to input the admins password)
+----
+
+.cd
+----
+Used to navigate through directories
+
+$ cd <directoryname>
+
+$ cd .. (navigates to previous directory)
+----
+
+.ls
+----
+Used to list the contents in the current directory
+
+$ ls 
+----
+
+.rm
+----
+Used to delete files or directories
+
+$ rm <file_name/directory_name>
+----
+
+.cp
+----
+Used to make copies of files or directories
+
+$ cp <file_name/directory_name>
+----
+
+.mv
+----
+Used to move or rename files
+
+$ mv <file> <target_directory> (Moves file to target directory)
+
+$ mv <old_file_name> <new_file_name> (Changes name of the file)
+----
+
+.pwd
+----
+Used to print the name of the working directory. i.e. Show where you are.
+
+$ pwd
+----
+
+
