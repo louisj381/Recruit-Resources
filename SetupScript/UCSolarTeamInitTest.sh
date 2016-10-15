@@ -1,5 +1,5 @@
-cd ~/Documents/SolarCar/DeltaTelemetryTestTool/Delta-Telemetry-Test-Tool/src
-qmake telemTestTool.pro
+cd ~/Documents/SolarCar/Delta-Telemetry-Test-Tool/src
+qmake 
 make
 
 cd ~/Documents/SolarCar/Epsilon-Embedded-Test-Tool/EmVer/
