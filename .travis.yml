@@ -12,8 +12,8 @@ before_script:
   - chmod +x UCSolarTeamInit.sh
 
 script:
-- UCSolarTeamInit.sh
+- ./UCSolarTeamInit.sh
 
 after_script:
 - chmod +x UCSolarTeamInitTest.sh
-- UCSolarTeamInitTest.sh
+- ./UCSolarTeamInitTest.sh
