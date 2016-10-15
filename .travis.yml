@@ -5,18 +5,15 @@ arch:
   - xorg-server-xvfb
 
 before_script:
-  - cd SetupScript
+  - cd SetupScript/
   - chmod +x UCSolarTeamInit.sh
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 
 script:
-- cd SetupScript  
 - UCSolarTeamInit.sh
 
 after_script:
-- cd SetupScript
-- chmod +x SetupScript/UCSolarTeamInitTest.sh
+- chmod +x UCSolarTeamInitTest.sh
 - UCSolarTeamInitTest.sh
-
