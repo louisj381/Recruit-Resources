@@ -1,0 +1,38 @@
+= Formatting to Astyle in Neovim
+
+In general the Solar Car Team will be formatting code in astyle.
+In neovim there are commands to format your file into astyle.
+
+== Installing Astyle
+
+
+To install the astyle files, run the following code in your terminal.
+[source,c++]
+----
+sudo apt-get install astyle
+----
+
+Now at anytime in neovim, running the following command will format your code into astyle.
+
+[source,c++]
+----
+:%!astyle
+----
+
+== Running astyle as an autocommand
+Open your init.vim file by running the command in terminal.
+
+[source,c++]
+----
+nvim ~/.config/nvim/init.vim
+----
+
+To run the astyle command everytime you save and quit, add the following code to the general section of your init.vim file.
+
+[source,c++]
+----
+augroup autocom
+    autocmd!
+    :autocmd VimLeave *.cpp,*.h execute '!astyle' shellescape(expand('%'), 1)
+augroup END
+----
