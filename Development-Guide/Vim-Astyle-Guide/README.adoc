@@ -63,7 +63,7 @@ In your local files, navigate to Recruit-Resources/Development-Guide/Style-Guide
 
 [source,c++]
 ----
-$echo 'pwd' /astylerc
+$echo `pwd`/astylerc
 ----
 to see what the /file/path/to/astylerc should be
 
