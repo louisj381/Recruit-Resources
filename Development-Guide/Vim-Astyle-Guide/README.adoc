@@ -6,6 +6,8 @@ In neovim there are commands to format your file into astyle.
 == Installing Autoformat to use with Astyle
 First install Astyle following the guide outlined in the Style Guide.
 
+Be sure to create the astylerc and know the file path to it.
+
 You will need to add python support for neovim.  Make sure the plugin is installed by running 
 
 [source, c++]
@@ -49,6 +51,16 @@ Now at any time running this command in neovim will format your code into Astyle
 :Autoformat
 ----
 
+To use Autoformat with our astylerc we need to add the code
+
+[source,c++]
+----
+let b:formatdef_custom_c='"astyle --mode=c --suffix=none --options=/file/path/to/astylerc"'
+let b:formatters_c = ['custom_c']
+----
+
+Change this file path to be to where your astylerc is saved to.
+
 == Using the Autoformat plugin as an auto command
 Open your init.vim file by running the command in terminal.
 
@@ -66,3 +78,8 @@ augroup autocom
     :au BufWrite * :Autoformat
 augroup END
 ----
+
+== Autoformat Plugin
+For more information on the Autoformat plugin, consult the page 
+
+http://vimawesome.com/plugin/vim-autoformat
