@@ -1,0 +1,46 @@
+== *Compiling and Flashing STM Board*
+
+----
+This has been tested on Linux Mint and is expected to work on other Debian based distros
+----
+
+
+=== Setup
+. Go to UCSolarCarTeam repo > Recruit Resources, and clone
+. Navigate to STM32F4Discovery-Resources and run the auto installer `sudo ./install.sh`. This will download STLink, gcc4mbed, and CubeMX2Makefile on your computer and add gcc4mbed to your path
+. Use a text editor you're comfortable with to add STLink and CubeMX2Makefile to your path. You can usually edit it in your .profile. For example: `nano ~/.profile`
+. Add them by copying  `export PATH=$PATH:/opt/CubeMX2Makefile` and `export PATH=$PATH:/opt/stlink` in your profile.
+. Save, exit, and source your profile `source ~/.profile`
+. Go to the link: http://www.st.com/en/development-tools/stm32cubemx.html
+. Scroll to the bottom of the page to the *GET SOFTWARE* section and click *Get Software*
+. Follow the instructions and download CubeMX
+. Extract files from .zip file.
+. Navigate to the directory that the files were extracted
+. Run *SetupSTM32CubeMX-VERSION.linux* `./SetupSTM32CubeMX-{var}.linux` where  {var} is the version of CubeMx that is being installed.
+. Follow the instructions of the Installation Wizard
+
+=== Making PROJECT, Creating Makefile, AND Making
+. Open CubeMX. The default path is `/home/STM32CubeMX`
+. Select New Project
+. Click on the Board Selector Tab and scroll down till you find STM32F4DISCOVERY then click Ok
+. Go to Project > Project Settings
+. Name your project, set your project location, and change the Toolchain/IDE to SW4STM32. *If you don't do this CubeMX2Makefile won't work!*
+. Make note of the Toolchain Folder Location
+. Click Ok and download any dependencies that are needed, then click Ok again
+. Do configurations and go to Project > Generate Code, then save project
+. Create the makefile  `CubeMX2Makefile /path/to/project/folder`
+. Go to the directory that the Makefile was made then compile the Makefile `make`
+. Navigate to the build directory and you should see PROJECT.bin, where PROJECT is the name of your project
+
+=== Flashing
+==== Introduction
+Flashing is how we get the code that we have made onto the actual board. We cannot just simply copy the .c file onto the board as it won't know what to do with it
+
+To flash the board use `st-flash write /path/to/project/build/PROJECT.bin 0x8000000`
+
+
+If a board isn't connected, and it ran successfully, you should get an output that looks like: 
+----
+st-flash 1.3.0-dev
+DATE/TIME WARN /opt/stlink/src/usb.c: Couldn't find any ST-Link/V2 devices
+----
