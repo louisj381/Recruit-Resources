@@ -1,7 +1,6 @@
-#include <iostream> //Imports cout
+#include <iostream>
 #include "Person.h"
 
-// Person::Person();  //creating what the functions actually DO here
 Person::Person()
 {
     name_ = "";
@@ -23,6 +22,7 @@ int Person::getAge() const
 {
     return *age_;
 }
+
 const std::string& Person::getName() const
 {
     return name_;
@@ -39,6 +39,7 @@ void Person::setName(const std::string& newName)
 {
     name_ = newName;
 }
+
 void Person::setAge(int newAge)
 {
     age_ = new int(newAge);
@@ -54,7 +55,7 @@ int Person::combinedAge(Person** x, int size)
     int c = 0; //
     for (int index = 0; index < size; index++)
     {
-        c = c + (x[index])->getAge();   //have to use brackets otherwise dot operator takes precesdence over double pointer
+        c = c + (x[index])->getAge();
         std::cout << "combinedAge: " << c << " age:" << (x[index])->getAge() << "\n";
 
     }
