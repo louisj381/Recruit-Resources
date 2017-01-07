@@ -52,12 +52,11 @@ void Person::birthday(Person& x)
 
 int Person::combinedAge(Person** x, int size)
 {
-    int c = 0; //
+    int c = 0;
     for (int index = 0; index < size; index++)
     {
         c = c + (x[index])->getAge();
         std::cout << "combinedAge: " << c << " age:" << (x[index])->getAge() << "\n";
-
     }
 
     return c;
