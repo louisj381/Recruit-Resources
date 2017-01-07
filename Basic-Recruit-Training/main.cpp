@@ -26,9 +26,7 @@ void mySwap(int& a, int& b)
 // Increment the int that x is pointing to by one.
 void myIncrement(int* x)
 {
-    ++*x;
-
-
+    ++(*x);
 }
 
 // Uncomment this when person.cpp has been created.
