@@ -1,9 +1,9 @@
 #include "BatteryStateOfChargeService.h"
+#include <QDebug>
 
 namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
-
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
@@ -18,28 +18,29 @@ BatteryStateOfChargeService::~BatteryStateOfChargeService()
 
 double BatteryStateOfChargeService::totalAmpHoursUsed() const
 {
-    //total used will be a dynamic initial plus either a positive or negative value, positive if depleting or negative is charging
     return initialAhUsed_ + chargeAh_;
 }
 
 bool BatteryStateOfChargeService::isCharging() const
 {
-    if (averageCurrent_ < 0)
+    if (current_ < 0)
        return true;
         return false;
 }
 
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
-    QTime timeWhenChargedOrDepleted(0, 0, 0, 0);
+    QTime time(0,0,0,0);
     int ms_remaining;
       if (isCharging() == true)  {
-        ms_remaining = totalAmpHoursUsed()/averageCurrent_ * 3.6e10;
+        ms_remaining = totalAmpHoursUsed()/averageCurrent_;
     }   else    {
-        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed())/averageCurrent_ * 3.6e10;
+        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed())/averageCurrent_;
+        ms_remaining *= -1;
     }
 
-    timeWhenChargedOrDepleted.addMSecs(ms_remaining);
+    QTime timeWhenChargedOrDepleted = time.addMSecs(ms_remaining);
+
     return timeWhenChargedOrDepleted;
 
 }
@@ -47,22 +48,19 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
 
-    QTime milliseconds;
-    double Mseconds = milliseconds.msec();
+    double DeltaMseconds = batteryData.time.msec() - Previous_milliseconds_.msec();
 
-    current = batteryData.current;
+    Previous_milliseconds_.addMSecs(batteryData.time.msec());
+
+    current_ = batteryData.current;
 
     initialAhUsed_ = (100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY;
 
     totalCurrent_ = batteryData.current + totalCurrent_;
 
-    averageCurrent_ = totalCurrent_/counter;
+    averageCurrent_ = totalCurrent_/counter_;
 
-    counter++;
+    counter_++;
 
-    chargeAh_ =  averageCurrent_*Mseconds;
-
-
-    Q_UNUSED(batteryData);
-    // This is where you can update your variables
+    chargeAh_ =  averageCurrent_*DeltaMseconds;
 }

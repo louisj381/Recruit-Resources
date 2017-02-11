@@ -1,5 +1,4 @@
 #pragma once
-
 #include <QObject>
 class I_BatteryDataSource;
 class I_BatteryStateOfChargeService;
