@@ -33,9 +33,9 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
     QTime time(0,0,0,0);
     int ms_remaining;
       if (isCharging() == true)  {
-        ms_remaining = totalAmpHoursUsed()/averageCurrent_;
+        ms_remaining = totalAmpHoursUsed()/averageCurrent_ *3.6E6;
     }   else    {
-        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed())/averageCurrent_;
+        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed())/averageCurrent_ *3.6E6;
         ms_remaining *= -1;
     }
 
@@ -48,9 +48,13 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
 
+    QTime updated_time;
+
     double DeltaMseconds = batteryData.time.msec() - Previous_milliseconds_.msec();
 
-    Previous_milliseconds_.addMSecs(batteryData.time.msec());
+    double DeltaHours = DeltaMseconds/1000 / 3600;
+
+    Previous_milliseconds_ = updated_time.addMSecs(batteryData.time.msec());
 
     current_ = batteryData.current;
 
@@ -62,5 +66,5 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 
     counter_++;
 
-    chargeAh_ =  averageCurrent_*DeltaMseconds;
+    chargeAh_ =  averageCurrent_*DeltaHours;
 }
