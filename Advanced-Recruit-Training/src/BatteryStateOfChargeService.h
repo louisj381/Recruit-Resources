@@ -23,15 +23,15 @@ public:
 private:
     // Convention is to have an _ after private members
     const double initialStateOfChargePercent_;
-    double initialAhUsed_;
-    double chargeAh_;
-    double averageCurrent_;
-    double totalCurrent_ = 0;
-    int counter_ = 1;
+    double totalAmpHoursUsed_;
+    double averageCurrent_; //
+    double totalCurrent_;
+    int counter_;
     double hours_remaining_;
     double current_;
     //QTime timeWhenChargedOrDepleted_;
-    QTime Previous_milliseconds_;
+    QTime initialTime_;
+    QTime PreviousMilliseconds_;
 
     // Add your necessary variables here
 };

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QTime>
-#include "BatteryData.h"    //added BatteryData.h so I can use BatteryData.current in BatteryStateOfChargeService
 
 struct BatteryData;
 
