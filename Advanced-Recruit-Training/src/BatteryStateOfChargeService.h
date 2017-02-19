@@ -1,6 +1,7 @@
 #pragma once
 
 #include "I_BatteryStateOfChargeService.h"
+#include <QString>
 
 class BatteryStateOfChargeService : public I_BatteryStateOfChargeService
 {
@@ -29,9 +30,7 @@ private:
     int counter_;
     double hours_remaining_;
     double current_;
-    //QTime timeWhenChargedOrDepleted_;
+    int initialAhUsed_;
     QTime initialTime_;
-    QTime PreviousMilliseconds_;
-
-    // Add your necessary variables here
+    QTime previousMilliseconds_;
 };

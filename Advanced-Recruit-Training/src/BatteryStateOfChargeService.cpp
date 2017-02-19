@@ -5,22 +5,20 @@
 namespace
 {
     const double BATTERY_AMP_HOUR_CAPACITY = 123.0;
-    const double ms_conversion = 3.6E6;
-    const double hour_conversion = 3.6E-6;
-    int counter = 1;
-    QTime placeholder(0,0,0,0);
-    int initialAhUsed;
+    const double MS_CONVERSION = 3.6E6;
+    const double HOUR_CONVERSION = 3.6E-6;
 }
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
     : initialStateOfChargePercent_(initialStateOfChargePercent)
 {
-    initialAhUsed = (100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY;
+    counter_ = 1;
+    QTime placeholder(0,0,0,0);
+    initialAhUsed_ = (100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY;
     totalCurrent_ = 0;
     initialTime_ = placeholder;
 
 }
-
 
 BatteryStateOfChargeService::~BatteryStateOfChargeService()
 {
@@ -43,11 +41,13 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
     QTime time(0,0,0,0);
     int ms_remaining;
-      if (isCharging() == true)  {
-        ms_remaining = totalAmpHoursUsed() / averageCurrent_ * ms_conversion;
-    }   else    {
-        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed()) / averageCurrent_ * ms_conversion;
-    }
+      if (isCharging() == true)
+      {
+        ms_remaining = totalAmpHoursUsed() / averageCurrent_ * MS_CONVERSION;
+      }   else
+      {
+        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed()) / averageCurrent_ * MS_CONVERSION;
+      }
 
     QTime timeWhenChargedOrDepleted = time.addMSecs(ms_remaining);
 
@@ -57,36 +57,32 @@ QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
-
-    int DeltaMseconds;
+    int deltaMseconds;
     double chargeAh;
-    QTime msTime;
-    QTime msTime1(0,0,0,0);
+    QTime msTime(0,0,0,0);
 
-    if (PreviousMilliseconds_.isNull())    {
-        qDebug() << "this is the first run";
-        PreviousMilliseconds_ = initialTime_.addMSecs(batteryData.time.msec());
+    if (previousMilliseconds_.isNull())
+    {
+        previousMilliseconds_ = initialTime_.addMSecs(batteryData.time.msec());
     }
 
-    msTime = msTime1.addMSecs(batteryData.time.msec());
+    msTime = msTime.addMSecs(batteryData.time.msec());
 
-    DeltaMseconds = abs(msTime.msecsTo(PreviousMilliseconds_));
+    deltaMseconds = abs(msTime.msecsTo(previousMilliseconds_));
 
-    qDebug() << DeltaMseconds;
+    double deltaHours = deltaMseconds * HOUR_CONVERSION;
 
-    double DeltaHours = DeltaMseconds * hour_conversion;
-
-    PreviousMilliseconds_ = initialTime_.addMSecs(batteryData.time.msec());
+    previousMilliseconds_ = initialTime_.addMSecs(batteryData.time.msec());
 
     current_ = batteryData.current;
 
     totalCurrent_ = batteryData.current + totalCurrent_;
 
-    averageCurrent_ = totalCurrent_ / counter;
+    averageCurrent_ = totalCurrent_ / counter_;
 
-    counter++;
+    counter_++;
 
-    chargeAh =  averageCurrent_ * DeltaHours;
+    chargeAh =  averageCurrent_ * deltaHours;
 
-    totalAmpHoursUsed_ = initialAhUsed + chargeAh;
+    totalAmpHoursUsed_ = initialAhUsed_ + chargeAh;
 }
