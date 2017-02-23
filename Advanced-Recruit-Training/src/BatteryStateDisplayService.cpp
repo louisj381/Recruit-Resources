@@ -10,7 +10,6 @@
 namespace
 {
     const QString TIME_FORMAT = "hh:mm:ss.zzz";
-    QString TIME_PARAMETER;
 }
 
 BatteryStateDisplayService::BatteryStateDisplayService(
@@ -30,6 +29,8 @@ BatteryStateDisplayService::~BatteryStateDisplayService()
 void BatteryStateDisplayService::handleBatteryDataReceived(const BatteryData& batteryData)
 {
     batteryStateOfChargeService_.addData(batteryData);
+
+    QString TIME_PARAMETER;
 
     if (batteryStateOfChargeService_.isCharging() == true)
     {
