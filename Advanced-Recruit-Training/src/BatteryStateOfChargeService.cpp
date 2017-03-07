@@ -64,18 +64,20 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     double chargeAh;
     QTime presentTime(0,0,0,0);
 
+    int Milliseconds = QTime(0, 0, 0, 0).msecsTo(batteryData.time);
+
     if (previousMilliseconds_.isNull())
     {
-        previousMilliseconds_ = initialTime_.addMSecs(batteryData.time.msec());
+        previousMilliseconds_ = initialTime_.addMSecs(Milliseconds);
     }
 
-    presentTime = presentTime.addMSecs(batteryData.time.msec());
+    presentTime = presentTime.addMSecs(Milliseconds);
 
     deltaMseconds = abs(presentTime.msecsTo(previousMilliseconds_));
 
     double deltaHours = deltaMseconds * MS_TO_HOURS_CONVERSION;
 
-    previousMilliseconds_ = initialTime_.addMSecs(batteryData.time.msec());
+    previousMilliseconds_ = initialTime_.addMSecs(Milliseconds);
 
     current_ = batteryData.current;
 
