@@ -1,6 +1,5 @@
 #include "BatteryStateOfChargeService.h"
 #include "BatteryData.h"
-#include <QDebug>
 
 namespace
 {
@@ -11,13 +10,9 @@ namespace
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
     : initialStateOfChargePercent_(initialStateOfChargePercent)
+, totalAmpHoursUsed_((100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY)
+, totalCurrent_(0)
 {
-    counter_ = 0;
-    QTime placeholder(0,0,0,0);
-    initialAhUsed_ = (100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY;
-    totalCurrent_ = 0;
-    initialTime_ = placeholder;
-
 }
 
 BatteryStateOfChargeService::~BatteryStateOfChargeService()
@@ -32,57 +27,52 @@ double BatteryStateOfChargeService::totalAmpHoursUsed() const
 bool BatteryStateOfChargeService::isCharging() const
 {
     if (current_ < 0)
+    {
        return true;
+    }
     else
+    {
         return false;
+    }
 }
 
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
-    QTime time(0,0,0,0);
     int ms_remaining;
-      if (isCharging())
-      {
-        ms_remaining = totalAmpHoursUsed() / averageCurrent_ * HOURS_TO_MS_CONVERSION;
-      }
-
-      else
-      {
-        ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed()) / averageCurrent_ * HOURS_TO_MS_CONVERSION;
-      }
-
-    QTime timeWhenChargedOrDepleted = time.addMSecs(ms_remaining);
-
-    return timeWhenChargedOrDepleted;
-
-}
-
-void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
-{
-    counter_++;
-    int deltaMseconds;
-    double chargeAh;
-
-    if (previousMilliseconds_.isNull())
+    if (isCharging())
     {
-        previousMilliseconds_ = batteryData.time;
+      ms_remaining = totalAmpHoursUsed() / averageCurrent_ * HOURS_TO_MS_CONVERSION;
+    }
+    else
+    {
+      ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed()) / averageCurrent_ * HOURS_TO_MS_CONVERSION;
     }
 
+    return QTime(0, 0, 0, 0).addMSecs(ms_remaining);
+
+}
+/*running average needs to be just the one after it, so I need to write the average as the current + past current divided by 2*/
+void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
+{
+    if (previousTime_.isNull())
+    {
+        previousTime_ = batteryData.time;
+    }
     QTime presentTime = batteryData.time;
-
-    deltaMseconds = abs(presentTime.msecsTo(previousMilliseconds_));
-
+    int deltaMseconds;
+    deltaMseconds = abs(presentTime.msecsTo(previousTime_));
     double deltaHours = deltaMseconds * MS_TO_HOURS_CONVERSION;
+    previousTime_ = batteryData.time;
 
-    previousMilliseconds_ = batteryData.time;
-
+    if (previousCurrent_ == NULL)
+    {
+        previousCurrent_ = batteryData.current;
+    }
     current_ = batteryData.current;
-
-    totalCurrent_ = batteryData.current + totalCurrent_;
-
-    averageCurrent_ = totalCurrent_ / counter_;
-
-    chargeAh =  averageCurrent_ * deltaHours;
-
-    totalAmpHoursUsed_ = initialAhUsed_ + chargeAh;
+    totalCurrent_ = batteryData.current + previousCurrent_;
+    averageCurrent_ = totalCurrent_ / 2;
+    double deltaAh;
+    deltaAh =  averageCurrent_ * deltaHours;
+    totalAmpHoursUsed_ += deltaAh;
+    previousCurrent_ = batteryData.current;
 }

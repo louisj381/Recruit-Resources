@@ -1,10 +1,8 @@
 #include <QTextStream>
-#include <QDebug>
 #include "BatteryData.h"
 #include "BatteryStateDisplayService.h"
 #include "I_BatteryDataSource.h"
 #include "I_BatteryStateOfChargeService.h"
-#include "BatteryStateOfChargeService.h"
 #include <QString>
 
 namespace
@@ -32,13 +30,13 @@ void BatteryStateDisplayService::handleBatteryDataReceived(const BatteryData& ba
 
     QString TIME_PARAMETER;
 
-    if (batteryStateOfChargeService_.isCharging() == true)
+    if (batteryStateOfChargeService_.isCharging())
     {
-        TIME_PARAMETER = " Time remaining until the Battery is Charged: ";
+        TIME_PARAMETER = " Time remaining until Battery is Charged: ";
     }
     else
     {
-        TIME_PARAMETER = " Time remaining until the Battery is Depleted: ";
+        TIME_PARAMETER = " Time remaining until Battery is Depleted: ";
     }
 
     QTextStream(stdout) << "Voltage: " << batteryData.voltage

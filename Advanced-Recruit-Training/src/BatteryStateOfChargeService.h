@@ -24,12 +24,9 @@ public:
 private:
     const double initialStateOfChargePercent_;
     double totalAmpHoursUsed_;
-    double averageCurrent_; //
+    double previousCurrent_;
+    double averageCurrent_;
     double totalCurrent_;
-    int counter_;
-    double hours_remaining_;
     double current_;
-    int initialAhUsed_;
-    QTime initialTime_;
-    QTime previousMilliseconds_;
+    QTime previousTime_;
 };
