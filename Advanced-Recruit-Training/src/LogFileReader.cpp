@@ -74,7 +74,7 @@ bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) con
 
     batteryData.current = sections.at(2).toDouble(&doubleConversionCurrent);
 
-    if (doubleConversionVoltage == false || doubleConversionCurrent == false)
+    if (!doubleConversionVoltage || !doubleConversionCurrent)
     {
         qDebug() << "double_conversion unsuccessful";
         return false;
