@@ -57,11 +57,6 @@ bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) con
         return false;
     }
 
-    else if (sections.length() > COLUMNS)
-    {
-        return false;
-    }
-
     QString timeString = sections.at(0);
     batteryData.time = QTime::fromString(timeString, STRING_TIME_FORMAT);
 
