@@ -15,7 +15,6 @@ BatteryStateDisplayService::BatteryStateDisplayService(
     I_BatteryStateOfChargeService& batteryStateOfChargeService)
 : batteryStateOfChargeService_(batteryStateOfChargeService)
 {
-
     connect(&batteryDataSource, SIGNAL(batteryDataReceived(const BatteryData&)),
         this, SLOT(handleBatteryDataReceived(const BatteryData&)));
 }

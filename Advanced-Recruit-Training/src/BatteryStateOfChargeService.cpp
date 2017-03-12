@@ -10,8 +10,7 @@ namespace
 
 BatteryStateOfChargeService::BatteryStateOfChargeService(double initialStateOfChargePercent)
     : initialStateOfChargePercent_(initialStateOfChargePercent)
-, totalAmpHoursUsed_((100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY)
-, totalCurrent_(0)
+    , totalAmpHoursUsed_((100 - initialStateOfChargePercent_) / 100 * BATTERY_AMP_HOUR_CAPACITY)
 {
 }
 
@@ -32,26 +31,25 @@ bool BatteryStateOfChargeService::isCharging() const
     }
     else
     {
-        return false;
+       return false;
     }
 }
 
 QTime BatteryStateOfChargeService::timeWhenChargedOrDepleted() const
 {
-    int ms_remaining;
+    int msRemaining;
     if (isCharging())
     {
-      ms_remaining = totalAmpHoursUsed() / averageCurrent_ * HOURS_TO_MS_CONVERSION;
+      msRemaining = totalAmpHoursUsed() / averageCurrent_ * HOURS_TO_MS_CONVERSION;
     }
     else
     {
-      ms_remaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed()) / averageCurrent_ * HOURS_TO_MS_CONVERSION;
+      msRemaining = (BATTERY_AMP_HOUR_CAPACITY - totalAmpHoursUsed()) / averageCurrent_ * HOURS_TO_MS_CONVERSION;
     }
 
-    return QTime(0, 0, 0, 0).addMSecs(ms_remaining);
+    return QTime(0, 0, 0, 0).addMSecs(msRemaining);
 
 }
-/*running average needs to be just the one after it, so I need to write the average as the current + past current divided by 2*/
 void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
 {
     if (previousTime_.isNull())
@@ -59,8 +57,7 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
         previousTime_ = batteryData.time;
     }
     QTime presentTime = batteryData.time;
-    int deltaMseconds;
-    deltaMseconds = abs(presentTime.msecsTo(previousTime_));
+    int deltaMseconds = abs(presentTime.msecsTo(previousTime_));
     double deltaHours = deltaMseconds * MS_TO_HOURS_CONVERSION;
     previousTime_ = batteryData.time;
 
@@ -69,8 +66,7 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
         previousCurrent_ = batteryData.current;
     }
     current_ = batteryData.current;
-    totalCurrent_ = batteryData.current + previousCurrent_;
-    averageCurrent_ = totalCurrent_ / 2;
+    averageCurrent_ = (batteryData.current + previousCurrent_) / 2;
     double deltaAh;
     deltaAh =  averageCurrent_ * deltaHours;
     totalAmpHoursUsed_ += deltaAh;

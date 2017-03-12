@@ -26,7 +26,6 @@ private:
     double totalAmpHoursUsed_;
     double previousCurrent_;
     double averageCurrent_;
-    double totalCurrent_;
     double current_;
     QTime previousTime_;
 };
