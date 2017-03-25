@@ -46,7 +46,6 @@ bool LogFileReader::readAll(const QString& fileName)
     return true;
 }
 
-
 bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) const
 {
     QStringList sections = line.split(BATDATA_DELIMITER);
@@ -70,6 +69,7 @@ bool LogFileReader::parseLine(const QString& line, BatteryData& batteryData) con
     {
         return false;
     }
+
     if (batteryData.time.isValid())
     {
         return true;

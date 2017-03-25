@@ -8,17 +8,9 @@ class BatteryStateOfChargeService : public I_BatteryStateOfChargeService
 public:
     explicit BatteryStateOfChargeService(double initialStateOfChargePercent);
     virtual ~BatteryStateOfChargeService();
-
-
     double totalAmpHoursUsed() const;
-
-
     bool isCharging() const;
-
-
     QTime timeWhenChargedOrDepleted() const;
-
-
     void addData(const BatteryData& batteryData);
 
 private:

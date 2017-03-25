@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     logFileReader.readAll(filename);
 
-    //Quit the program when it is done.
+    // Quit the program when it is done.
     QTimer::singleShot(0, &app, SLOT(quit()));
     return app.exec();
 };
