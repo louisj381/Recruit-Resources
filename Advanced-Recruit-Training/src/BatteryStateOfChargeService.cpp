@@ -58,7 +58,7 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     }
     QTime presentTime = batteryData.time;
     int deltaMseconds = abs(presentTime.msecsTo(previousTime_));
-    double deltaHours = deltaMseconds * MS_TO_HOURS_CONVERSION;
+    double deltaHours = (double)deltaMseconds * MS_TO_HOURS_CONVERSION;
     previousTime_ = batteryData.time;
 
     if (previousCurrent_ == NULL)
@@ -67,8 +67,6 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     }
     current_ = batteryData.current;
     averageCurrent_ = (batteryData.current + previousCurrent_) / 2;
-    double deltaAh;
-    deltaAh =  averageCurrent_ * deltaHours;
-    totalAmpHoursUsed_ += deltaAh;
+    totalAmpHoursUsed_ += averageCurrent_ * deltaHours;
     previousCurrent_ = batteryData.current;
 }
