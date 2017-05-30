@@ -25,7 +25,7 @@ double BatteryStateOfChargeService::totalAmpHoursUsed() const
 
 bool BatteryStateOfChargeService::isCharging() const
 {
-    if (current_ < 0)
+    if (previousCurrent_ < 0)
     {
        return true;
     }
@@ -65,8 +65,7 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     {
         previousCurrent_ = batteryData.current;
     }
-    current_ = batteryData.current;
     averageCurrent_ = (batteryData.current + previousCurrent_) / 2;
     totalAmpHoursUsed_ += averageCurrent_ * deltaHours;
-    previousCurrent_ = current_;
+    previousCurrent_ = batteryData.current;
 }
