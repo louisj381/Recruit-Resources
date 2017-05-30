@@ -68,5 +68,5 @@ void BatteryStateOfChargeService::addData(const BatteryData& batteryData)
     current_ = batteryData.current;
     averageCurrent_ = (batteryData.current + previousCurrent_) / 2;
     totalAmpHoursUsed_ += averageCurrent_ * deltaHours;
-    previousCurrent_ = batteryData.current;
+    previousCurrent_ = current_;
 }
